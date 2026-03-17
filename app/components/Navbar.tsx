@@ -3,7 +3,7 @@ import Image from 'next/image';
 const Navbar = () => {
     return (
         <nav className="fixed flex justify-between left-0 w-full z-50  px-8 py-8 md:px-12 mx-6">
-            <div className="flex gap-4 items-center ">
+            <div className="flex gap-4 items-center">
                 <Image
                     src={'/swanson_logo.png'}
                     alt="Swanson logo"
@@ -19,7 +19,7 @@ const Navbar = () => {
                     // className="w-full h-auto"
                 />
             </div>
-            <div className="w-245 h-16.25 text-[14px] bg-[#6C6C6C33] backdrop-blur-sm rounded-bl-2xl pl-8 pr-4 mt-[-8] flex justify-between">
+            <div className="w-245 h-16.25 text-[14px] bg-[#6C6C6C33] backdrop-blur-sm rounded-2xl pl-8 pr-4 mt-[-8] flex justify-between">
                 <button>About Us</button>
 
                 <button>Our Story</button>
