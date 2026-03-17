@@ -1,11 +1,13 @@
 'use client';
 
 import { useGSAP } from '@gsap/react';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/all';
 import Crosshair from './ui/Crosshair';
 import { FaArrowDown } from 'react-icons/fa6';
+import { ImageSequence } from '../lib/ImageSequence';
+import { start } from 'repl';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -33,7 +35,7 @@ const SLIDES = [
     // },
 ];
 
-const SCROLL_HEIGHT = '400vh';
+const SCROLL_HEIGHT = '600vh';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -42,27 +44,51 @@ export default function Hero() {
     const triggerRef = useRef<HTMLDivElement>(null);
     const pinnedRef = useRef<HTMLDivElement>(null);
 
+    const progress = useRef<number>(0);
+
     useGSAP(
         () => {
+            // 1. INTRO
+            const intro = gsap.timeline();
+
+            // 2. SCROLL TIMELINE
             const tl = gsap.timeline({
+                ease: 'none',
                 scrollTrigger: {
                     trigger: containerRef.current,
-                    scrub: true,
+                    scrub: 1,
                     pin: pinnedRef.current,
                     start: 'top top',
-                    end: '+=300%',
+                    end: '+=500%',
+                    onUpdate: (self) => {
+                        const eased = gsap.parseEase('power2.out')(self.progress);
+                        progress.current = eased;
+                    },
                 },
             });
 
             // --- SLIDE 01 ---
-            tl.from('.label01', { opacity: 0, duration: 1 })
-                .from('.headline01', { opacity: 0, duration: 1 }, '<')
 
-                .to('.label01', { opacity: 0, duration: 1 })
-                .to('.headline01', { x: 1500, opacity: 0, duration: 1 }, '<');
+            tl.from('.label01', { autoAlpha: 0, duration: 1 }, '-=0.5')
+                .from(
+                    '.headline01',
+                    {
+                        autoAlpha: 0,
+                        duration: 1,
+                    },
+                    '<',
+                )
+                //HOLD
+                .to({}, { duration: 0.5 });
+
+            tl.to('.label01', { autoAlpha: 0, duration: 1 }).to(
+                '.headline01',
+                { x: 1200, autoAlpha: 0, duration: 1 },
+                '<',
+            );
 
             // --- SLIDE 02 ---
-            tl.from('.label02', { opacity: 0, duration: 1 }, '-=0.5')
+            tl.from('.label02', { autoAlpha: 0, duration: 1 }, '-=0.5')
                 .from(
                     '.headline02',
                     {
@@ -74,12 +100,12 @@ export default function Hero() {
                 //HOLD
                 .to({}, { duration: 0.5 })
 
-                .to('.label02', { opacity: 0, duration: 1 })
-                .to('.headline02', { x: 1500, opacity: 0, duration: 1 }, '<');
+                .to('.label02', { autoAlpha: 0, duration: 1 })
+                .to('.headline02', { x: 1200, autoAlpha: 0, duration: 1 }, '<');
 
             // --- SLIDE 03 ---
 
-            tl.from('.label03', { opacity: 0, duration: 1 }, '-=0.5')
+            tl.from('.label03', { autoAlpha: 0, duration: 1 }, '-=0.5')
                 .from(
                     '.headline03',
                     {
@@ -92,14 +118,14 @@ export default function Hero() {
                 //HOLD
                 .to({}, { duration: 0.5 })
 
-                .to('.label03', { opacity: 0, duration: 1 })
-                .to('.headline03', { x: -800, opacity: 0, duration: 1 }, '<');
+                .to('.label03', { autoAlpha: 0, duration: 1 })
+                .to('.headline03', { x: -800, autoAlpha: 0, duration: 1 }, '<');
 
             tl.from(
                 '.headline_main',
                 {
                     y: 600,
-                    opacity: 0,
+                    autoAlpha: 0,
                     duration: 1,
                 },
                 '+=1',
@@ -113,7 +139,7 @@ export default function Hero() {
     return (
         <>
             <div ref={containerRef} className={`h-[${SCROLL_HEIGHT}]`}>
-                {/* <ImageSequence /> */}
+                <ImageSequence progress={progress} />
                 <div ref={pinnedRef} className="h-screen z-10">
                     <div ref={triggerRef} className="relative w-full h-full z-15 overflow-clip ">
                         <div className="inset-0 z-60 pointer-events-none">
