@@ -7,7 +7,6 @@ import { ScrollTrigger } from 'gsap/all';
 import Crosshair from './ui/Crosshair';
 import { FaArrowDown } from 'react-icons/fa6';
 import { ImageSequence } from '../lib/ImageSequence';
-import { start } from 'repl';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -57,24 +56,24 @@ export default function Hero() {
                     autoAlpha: 0,
                 },
             );
-            // ── 2. Create Scroll Timeline Immediately (to avoid layout jumps) ────
+            // ── 2. Create Scroll Timeline
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: containerRef.current,
                     scrub: 1,
                     pin: pinnedRef.current,
                     start: 'top top',
-                    end: '+=250%', // Adjusted for your "more frames per scroll" request
+                    end: '+=250%',
                     onUpdate: (self) => {
                         progress.current = self.progress;
                     },
                 },
             });
-            // DISABLE IT IMMEDIATELY
+
             if (!tl.scrollTrigger) return;
             tl.scrollTrigger.disable();
-            // Build the timeline (use immediateRender: false to avoid state conflicts)
-            tl.to({}, { duration: 1 }) // Hold Slide 01
+
+            tl.to({}, { duration: 1 })
                 .to('.label01', { autoAlpha: 0, duration: 1, immediateRender: false })
                 .to('.headline01', { x: 1200, autoAlpha: 0, duration: 1 }, '<')
                 .fromTo('.label02', { autoAlpha: 0 }, { autoAlpha: 1, duration: 1 }, '-=0.5')
