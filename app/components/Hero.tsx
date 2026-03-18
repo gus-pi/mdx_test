@@ -233,10 +233,6 @@ export default function Hero() {
                     </div>
                 </div>
             </div>
-            {/* Space for the next section */}
-            <div className="relative z-10 h-screen bg-white flex items-center justify-center">
-                <h2 className="text-black text-4xl">Next Section Starts Here</h2>
-            </div>
         </>
     );
 }
