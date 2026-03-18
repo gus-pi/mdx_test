@@ -9,7 +9,7 @@ export function ImageSequence({ progress }: { progress: React.RefObject<number> 
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
+        if (!canvas || !progress) return;
 
         function resizeCanvas() {
             if (!canvas) return;

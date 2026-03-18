@@ -36,6 +36,7 @@ const SLIDES = [
 ];
 
 const SCROLL_HEIGHT = '600vh';
+const INTRO_END = 0.2;
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -45,95 +46,94 @@ export default function Hero() {
     const pinnedRef = useRef<HTMLDivElement>(null);
 
     const progress = useRef<number>(0);
+    const masterProxy = useRef({ value: 0 });
 
     useGSAP(
         () => {
-            // 1. INTRO
-            const intro = gsap.timeline();
-
-            // 2. SCROLL TIMELINE
+            // ── 1. Zero state
+            gsap.set(
+                '.label01, .headline01, .label02, .headline02, .label03, .headline03, .headline_main',
+                {
+                    autoAlpha: 0,
+                },
+            );
+            // ── 2. Create Scroll Timeline Immediately (to avoid layout jumps) ────
             const tl = gsap.timeline({
-                ease: 'none',
                 scrollTrigger: {
                     trigger: containerRef.current,
                     scrub: 1,
                     pin: pinnedRef.current,
                     start: 'top top',
-                    end: '+=500%',
+                    end: '+=250%', // Adjusted for your "more frames per scroll" request
                     onUpdate: (self) => {
-                        const eased = gsap.parseEase('power2.out')(self.progress);
-                        progress.current = eased;
+                        progress.current = self.progress;
                     },
                 },
             });
-
-            // --- SLIDE 01 ---
-
-            tl.from('.label01', { autoAlpha: 0, duration: 1 }, '-=0.5')
-                .from(
-                    '.headline01',
-                    {
-                        autoAlpha: 0,
-                        duration: 1,
-                    },
-                    '<',
-                )
-                //HOLD
-                .to({}, { duration: 0.5 });
-
-            tl.to('.label01', { autoAlpha: 0, duration: 1 }).to(
-                '.headline01',
-                { x: 1200, autoAlpha: 0, duration: 1 },
-                '<',
-            );
-
-            // --- SLIDE 02 ---
-            tl.from('.label02', { autoAlpha: 0, duration: 1 }, '-=0.5')
-                .from(
+            // DISABLE IT IMMEDIATELY
+            if (!tl.scrollTrigger) return;
+            tl.scrollTrigger.disable();
+            // Build the timeline (use immediateRender: false to avoid state conflicts)
+            tl.to({}, { duration: 1 }) // Hold Slide 01
+                .to('.label01', { autoAlpha: 0, duration: 1, immediateRender: false })
+                .to('.headline01', { x: 1200, autoAlpha: 0, duration: 1 }, '<')
+                .fromTo('.label02', { autoAlpha: 0 }, { autoAlpha: 1, duration: 1 }, '-=0.5')
+                .fromTo(
                     '.headline02',
-                    {
-                        x: -800,
-                        duration: 1,
-                    },
+                    { x: -800, autoAlpha: 1 },
+                    { x: 0, autoAlpha: 1, duration: 1 },
                     '<',
                 )
-                //HOLD
                 .to({}, { duration: 0.5 })
-
                 .to('.label02', { autoAlpha: 0, duration: 1 })
-                .to('.headline02', { x: 1200, autoAlpha: 0, duration: 1 }, '<');
-
-            // --- SLIDE 03 ---
-
-            tl.from('.label03', { autoAlpha: 0, duration: 1 }, '-=0.5')
-                .from(
+                .to('.headline02', { x: 1200, autoAlpha: 0, duration: 1 }, '<')
+                .fromTo('.label03', { autoAlpha: 0 }, { autoAlpha: 1, duration: 1 }, '-=0.5')
+                .fromTo(
                     '.headline03',
-                    {
-                        x: -800,
-                        duration: 1,
-                    },
+                    { x: -800, autoAlpha: 1 },
+                    { x: 0, autoAlpha: 1, duration: 1 },
                     '<',
                 )
-
-                //HOLD
                 .to({}, { duration: 0.5 })
-
                 .to('.label03', { autoAlpha: 0, duration: 1 })
-                .to('.headline03', { x: -800, autoAlpha: 0, duration: 1 }, '<');
-
-            tl.from(
-                '.headline_main',
-                {
-                    y: 600,
-                    autoAlpha: 0,
-                    duration: 1,
+                .to('.headline03', { x: -800, autoAlpha: 0, duration: 1 }, '<')
+                .fromTo(
+                    '.headline_main',
+                    { y: 600, autoAlpha: 0 },
+                    { y: 0, autoAlpha: 1, duration: 1 },
+                    '+=1',
+                )
+                .to({}, { duration: 2 });
+            // ── 3. Intro Timeline
+            const intro = gsap.timeline({
+                onComplete: () => {
+                    // Enable the scroll logic now that the intro is done
+                    if (!tl.scrollTrigger) return;
+                    tl.scrollTrigger.enable();
+                    // Forces GSAP to re-calculate everything now that Slide 01 is visible
+                    ScrollTrigger.refresh();
                 },
-                '+=1',
-            ).to({}, { duration: 2 });
+            });
+            intro
+                .fromTo(
+                    masterProxy.current,
+                    { value: INTRO_END },
+                    {
+                        value: 0,
+                        duration: 1.4,
+                        ease: 'power2.out',
+                        onUpdate: () => {
+                            progress.current = masterProxy.current.value;
+                        },
+                    },
+                )
+                .to('.label01, .headline01', {
+                    autoAlpha: 1,
+                    duration: 0.9,
+                    ease: 'power2.out',
+                });
         },
-        {
-            scope: containerRef,
-        },
+        { scope: containerRef },
     );
 
     return (
