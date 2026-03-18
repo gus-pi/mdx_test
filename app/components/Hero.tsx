@@ -26,15 +26,8 @@ const SLIDES = [
         headline: ['Prosperity', 'Protected'],
         counter: '03',
     },
-    // // Slide 3 — centred, no label, no counter
-    // {
-    //     label: null,
-    //     headline: ['+ We are', 'Swanson Reserve'],
-    //     counter: '04',
-    // },
 ];
 
-const SCROLL_HEIGHT = '600vh';
 const INTRO_END = 0.2;
 
 gsap.registerPlugin(ScrollTrigger);
@@ -56,6 +49,8 @@ export default function Hero() {
                     autoAlpha: 0,
                 },
             );
+
+            document.body.style.overflow = 'hidden';
             // ── 2. Create Scroll Timeline
             const tl = gsap.timeline({
                 scrollTrigger: {
@@ -70,12 +65,26 @@ export default function Hero() {
                 },
             });
 
-            if (!tl.scrollTrigger) return;
-            tl.scrollTrigger.disable();
-
-            tl.to({}, { duration: 1 })
-                .to('.label01', { autoAlpha: 0, duration: 1, immediateRender: false })
+            tl
+                // Slide 01 — fade IN the label & headline as part of the scroll timeline
+                // so scrubbing back to 0 restores them
+                .fromTo(
+                    '.label01',
+                    { autoAlpha: 0 },
+                    { autoAlpha: 1, duration: 0.01, immediateRender: false },
+                )
+                .fromTo(
+                    '.headline01',
+                    { autoAlpha: 0 },
+                    { autoAlpha: 1, duration: 0.01, immediateRender: false },
+                    '<',
+                )
+                // Hold slide 01 visible
+                .to({}, { duration: 1 })
+                // Slide 01 out
+                .to('.label01', { autoAlpha: 0, duration: 1 })
                 .to('.headline01', { x: 1200, autoAlpha: 0, duration: 1 }, '<')
+                // Slide 02 in
                 .fromTo('.label02', { autoAlpha: 0 }, { autoAlpha: 1, duration: 1 }, '-=0.5')
                 .fromTo(
                     '.headline02',
@@ -84,8 +93,10 @@ export default function Hero() {
                     '<',
                 )
                 .to({}, { duration: 0.5 })
+                // Slide 02 out
                 .to('.label02', { autoAlpha: 0, duration: 1 })
                 .to('.headline02', { x: 1200, autoAlpha: 0, duration: 1 }, '<')
+                // Slide 03 in
                 .fromTo('.label03', { autoAlpha: 0 }, { autoAlpha: 1, duration: 1 }, '-=0.5')
                 .fromTo(
                     '.headline03',
@@ -94,23 +105,25 @@ export default function Hero() {
                     '<',
                 )
                 .to({}, { duration: 0.5 })
+                // Slide 03 out
                 .to('.label03', { autoAlpha: 0, duration: 1 })
                 .to('.headline03', { x: -800, autoAlpha: 0, duration: 1 }, '<')
+                // Main headline in
                 .fromTo(
                     '.headline_main',
                     { y: 600, autoAlpha: 0 },
                     { y: 0, autoAlpha: 1, duration: 1 },
-                    '+=1',
-                )
-                .to({}, { duration: 2 });
+                    '+=0.5',
+                );
+
+            window.scrollTo(0, 0);
+            ScrollTrigger.refresh();
             // ── 3. Intro Timeline
             const intro = gsap.timeline({
                 onComplete: () => {
-                    // Enable the scroll logic now that the intro is done
-                    if (!tl.scrollTrigger) return;
-                    tl.scrollTrigger.enable();
-                    // Forces GSAP to re-calculate everything now that Slide 01 is visible
-                    ScrollTrigger.refresh();
+                    // Unlock scroll after intro finishes
+                    document.body.style.overflow = '';
+                    // No need to enable or refresh — it's already set up
                 },
             });
             intro
@@ -137,9 +150,9 @@ export default function Hero() {
 
     return (
         <>
-            <div ref={containerRef} className={`h-[${SCROLL_HEIGHT}]`}>
-                <ImageSequence progress={progress} />
-                <div ref={pinnedRef} className="h-screen z-10">
+            <div ref={containerRef} className={`h-[350vh]`}>
+                <div ref={pinnedRef} className="relative h-screen z-10">
+                    <ImageSequence progress={progress} />
                     <div ref={triggerRef} className="relative w-full h-full z-15 overflow-clip ">
                         <div className="inset-0 z-60 pointer-events-none">
                             {/*Rounded vignette*/}
