@@ -19,7 +19,7 @@ const Navbar = () => {
                     // className="w-full h-auto"
                 />
             </div>
-            <div className="w-245 h-16.25 text-[14px] bg-[#6C6C6C33] backdrop-blur-sm rounded-2xl pl-8 pr-4 mt-[-8] flex justify-between">
+            <div className="w-245 h-16.25 text-[14px] bg-[#6C6C6C33] backdrop-blur-sm rounded-2xl pl-15 pr-4 mt-[-8] flex justify-between">
                 <button>About Us</button>
 
                 <button>Our Story</button>
@@ -29,6 +29,10 @@ const Navbar = () => {
                 <button className="bg-[#DCC562] px-5 my-3 rounded-lg text-black flex gap-2 items-center">
                     <img src="/+symbol.png" className="w-3 h-3" />
                     Schedule
+                </button>
+                <button className="flex flex-col justify-center gap-2 mr-10 -ml-10">
+                    <span className="w-19 h-1 bg-[#DCC562]" />
+                    <span className="w-19 h-0.5 bg-[#DCC562]" />
                 </button>
             </div>
         </nav>

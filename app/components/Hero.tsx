@@ -42,7 +42,7 @@ export default function Hero() {
 
     useGSAP(
         () => {
-            // ── 1. Zero state
+            // Zero state
             gsap.set(
                 '.label01, .headline01, .label02, .headline02, .label03, .headline03, .headline_main',
                 {
@@ -51,7 +51,7 @@ export default function Hero() {
             );
 
             document.body.style.overflow = 'hidden';
-            // ── 2. Create Scroll Timeline
+            // Scroll Timeline
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: containerRef.current,
@@ -65,21 +65,18 @@ export default function Hero() {
                 },
             });
 
-            tl
-                // Slide 01 — fade IN the label & headline as part of the scroll timeline
-                // so scrubbing back to 0 restores them
-                .fromTo(
-                    '.label01',
-                    { autoAlpha: 0 },
-                    { autoAlpha: 1, duration: 0.01, immediateRender: false },
-                )
+            tl.fromTo(
+                '.label01',
+                { autoAlpha: 0 },
+                { autoAlpha: 1, duration: 0.01, immediateRender: false },
+            )
                 .fromTo(
                     '.headline01',
                     { autoAlpha: 0 },
                     { autoAlpha: 1, duration: 0.01, immediateRender: false },
                     '<',
                 )
-                // Hold slide 01 visible
+
                 .to({}, { duration: 1 })
                 // Slide 01 out
                 .to('.label01', { autoAlpha: 0, duration: 1 })
@@ -118,7 +115,7 @@ export default function Hero() {
 
             window.scrollTo(0, 0);
             ScrollTrigger.refresh();
-            // ── 3. Intro Timeline
+            // Intro Timeline
             const intro = gsap.timeline({
                 onComplete: () => {
                     // Unlock scroll after intro finishes
