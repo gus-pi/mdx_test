@@ -16,10 +16,10 @@ const Navbar = () => {
                     alt="Swanson text"
                     width={192}
                     height={0}
-                    // className="w-full h-auto"
+                    className="hidden md:block"
                 />
             </div>
-            <div className="w-245 h-16.25 text-[14px] bg-[#6C6C6C33] backdrop-blur-sm rounded-2xl pl-15 pr-4 mt-[-8] flex justify-between">
+            <div className="hidden md:flex w-245 h-16.25 text-[14px] bg-[#6C6C6C33] backdrop-blur-sm rounded-2xl pl-15 pr-4 mt-[-8] flex justify-between">
                 <button>About Us</button>
 
                 <button>Our Story</button>
@@ -35,6 +35,11 @@ const Navbar = () => {
                     <span className="w-19 h-0.5 bg-[#DCC562]" />
                 </button>
             </div>
+            {/* Mobile hamburger */}
+            <button className="flex md:hidden flex-col justify-center gap-1.5 mr-10">
+                <span className="w-15 h-1 bg-white" />
+                <span className="w-15 h-0.5 bg-white" />
+            </button>
         </nav>
     );
 };

@@ -4,6 +4,11 @@ import { useEffect, useRef } from 'react';
 import { fitContent, remap } from './math';
 import { gsap } from 'gsap';
 
+const SEQUENCES = {
+    desktop: { folder: 'sequence_desktop', frames: 255 },
+    mobile: { folder: 'sequence_mobile', frames: 238 },
+};
+
 export function ImageSequence({ progress }: { progress: React.RefObject<number> }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -21,16 +26,16 @@ export function ImageSequence({ progress }: { progress: React.RefObject<number> 
         window.addEventListener('resize', resizeCanvas);
 
         const ctx = canvas.getContext('2d');
+        const isMobile = window.innerWidth < 768;
+        const { folder, frames } = isMobile ? SEQUENCES.mobile : SEQUENCES.desktop;
 
         const images: Record<number, HTMLImageElement> = {};
 
-        for (let index = 0; index < 255; index++) {
+        for (let index = 0; index < frames; index++) {
             const img = new Image();
 
             const frame = index.toString().padStart(5, '0');
-            const imageCode = `swanson__${frame}`;
-
-            img.src = `/sequence_desktop/${imageCode}.webp`;
+            img.src = `/${folder}/swanson__${frame}.webp`;
             img.onload = () => {
                 images[index] = img;
             };
@@ -39,7 +44,7 @@ export function ImageSequence({ progress }: { progress: React.RefObject<number> 
         gsap.ticker.add(() => {
             if (!canvas) return;
 
-            let frameNumber = remap(progress.current, 0, 1, 0, 255);
+            let frameNumber = remap(progress.current, 0, 1, 0, frames);
             frameNumber = Math.round(frameNumber);
 
             const img = images[frameNumber];
@@ -56,6 +61,10 @@ export function ImageSequence({ progress }: { progress: React.RefObject<number> 
             ctx?.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
             ctx?.drawImage(img, x, y, width, height);
         });
+
+        return () => {
+            window.removeEventListener('resize', resizeCanvas);
+        };
     }, []);
 
     return <canvas ref={canvasRef} className="absolute top-0 left-0 w-screen h-screen z-0" />;

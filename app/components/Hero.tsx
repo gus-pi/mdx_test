@@ -169,7 +169,7 @@ export default function Hero() {
                                                 className={`label${slide.counter} flex items-center gap-6 mb-6`}
                                             >
                                                 <div className="w-24 h-px bg-white/60" />
-                                                <span className="text-[20px] md:text-[30px] font-light text-white/80 uppercase tracking-widest">
+                                                <span className="text-[15px] md:text-[30px] font-light text-white tracking-widest">
                                                     {slide.label}
                                                 </span>
                                             </div>
@@ -177,7 +177,7 @@ export default function Hero() {
 
                                         {/* Title */}
                                         <h1
-                                            className={`headline${slide.counter} text-6xl md:text-[150px] font-medium tracking-tight leading-[0.85] mb-24`}
+                                            className={`headline${slide.counter} text-6xl md:text-[150px] font-medium tracking-tight leading-none mb-24`}
                                         >
                                             {slide.headline[0]} <br /> {slide.headline[1]}
                                         </h1>
@@ -186,18 +186,18 @@ export default function Hero() {
 
                                 {/* Main Title */}
                                 <div className="headline_main absolute inset-0 z-30 flex items-end justify-center pointer-events-none">
-                                    <h1 className="text-6xl text-center md:text-[150px] font-medium tracking-tight leading-[0.85] flex flex-col items-center">
+                                    <h1 className="text-4xl md:text-6xl text-center md:text-[150px] font-medium tracking-tight leading-[0.85] flex flex-col items-center">
                                         <span className="flex items-center gap-4 md:gap-8">
                                             <Crosshair
                                                 size={120}
                                                 strokeWidth={1.5}
-                                                className="w-[0.5em] h-[0.5em] md:w-[0.7em] md:h-[0.7em]"
+                                                className="w-[0.7em] h-[0.7em]"
                                             />
                                             <span>We are</span>
                                         </span>
                                         <span>Swanson Reserve</span>
                                         <span className="flex flex-col items-center gap-4 py-10">
-                                            <span className="uppercase text-[20px] font-light tracking-normal">
+                                            <span className="uppercase text-[15px] md:text-[20px] font-light tracking-normal">
                                                 Scroll to Explore
                                             </span>
                                             <FaArrowDown className="w-6 h-6" />
@@ -219,7 +219,7 @@ export default function Hero() {
                             </section>
                         </div>
                         {/* Vertical scroll indicator */}
-                        <div className="absolute right-0 bottom-0 z-10 flex flex-col items-center gap-8 bg-[#6C6C6C33] backdrop-blur-sm rounded-t-2xl p-4 px-8 ">
+                        <div className="hidden absolute right-0 bottom-0 z-10 md:flex flex-col items-center gap-8 bg-[#6C6C6C33] backdrop-blur-sm rounded-t-2xl p-4 px-8 ">
                             <span
                                 className="uppercase tracking-[0.4em] text-[17px] text-white/80"
                                 style={{ writingMode: 'sideways-lr' }}
