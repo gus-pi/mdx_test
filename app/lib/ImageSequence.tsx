@@ -9,7 +9,12 @@ const SEQUENCES = {
     mobile: { folder: 'sequence_mobile', frames: 238 },
 };
 
-export function ImageSequence({ progress }: { progress: React.RefObject<number> }) {
+interface ImageSequenceProps {
+    progress: React.RefObject<number>;
+    onLoaded?: () => void;
+}
+
+export function ImageSequence({ progress, onLoaded }: ImageSequenceProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -30,14 +35,24 @@ export function ImageSequence({ progress }: { progress: React.RefObject<number> 
         const { folder, frames } = isMobile ? SEQUENCES.mobile : SEQUENCES.desktop;
 
         const images: Record<number, HTMLImageElement> = {};
+        let loadedCount = 0;
 
         for (let index = 0; index < frames; index++) {
-            const img = new Image();
-
+            const img = new window.Image();
             const frame = index.toString().padStart(5, '0');
             img.src = `/${folder}/swanson__${frame}.webp`;
             img.onload = () => {
                 images[index] = img;
+                loadedCount++;
+                if (loadedCount >= frames) {
+                    onLoaded?.();
+                }
+            };
+            img.onerror = () => {
+                loadedCount++;
+                if (loadedCount >= frames) {
+                    onLoaded?.();
+                }
             };
         }
 

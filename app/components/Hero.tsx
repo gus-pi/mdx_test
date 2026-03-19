@@ -32,7 +32,12 @@ const INTRO_END = 0.2;
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Hero() {
+interface HeroProps {
+    onLoaded?: () => void;
+    isLoaded?: boolean;
+}
+
+export default function Hero({ onLoaded, isLoaded }: HeroProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const triggerRef = useRef<HTMLDivElement>(null);
     const pinnedRef = useRef<HTMLDivElement>(null);
@@ -42,6 +47,7 @@ export default function Hero() {
 
     useGSAP(
         () => {
+            if (!isLoaded) return;
             // Zero state
             gsap.set(
                 '.label01, .headline01, .label02, .headline02, .label03, .headline03, .headline_main',
@@ -117,6 +123,7 @@ export default function Hero() {
             ScrollTrigger.refresh();
             // Intro Timeline
             const intro = gsap.timeline({
+                delay: 0.6,
                 onComplete: () => {
                     // Unlock scroll after intro finishes
                     document.body.style.overflow = '';
@@ -142,14 +149,14 @@ export default function Hero() {
                     ease: 'power2.out',
                 });
         },
-        { scope: containerRef },
+        { scope: containerRef, dependencies: [isLoaded] },
     );
 
     return (
         <>
             <div ref={containerRef} className={`h-[350vh]`}>
                 <div ref={pinnedRef} className="relative h-screen z-10">
-                    <ImageSequence progress={progress} />
+                    <ImageSequence progress={progress} onLoaded={onLoaded} />
                     <div ref={triggerRef} className="relative w-full h-full z-15 overflow-clip ">
                         <div className="inset-0 z-60 pointer-events-none">
                             {/*Rounded vignette*/}
