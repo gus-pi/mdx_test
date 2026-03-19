@@ -4,7 +4,7 @@ import { Canvas } from '@react-three/fiber';
 import { ScrollTrigger } from 'gsap/all';
 import { Environment } from '@react-three/drei';
 import { useGSAP } from '@gsap/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Group } from 'three';
 import gsap from 'gsap';
 import { Swan } from './3D/Swan';
@@ -43,11 +43,18 @@ const Section2 = () => {
 
     const [scrollGroup, setScrollGroup] = useState<Group | null>(null);
     const [idleGroup, setIdleGroup] = useState<Group | null>(null);
+    const [isMobile, setIsMobile] = useState(false);
     const idleSpinTween = useRef<gsap.core.Tween | null>(null);
+
+    useEffect(() => {
+        setIsMobile(window.innerWidth < 768);
+    }, []);
 
     useGSAP(
         () => {
             if (!containerRef.current || !pinnedRef.current || !scrollGroup || !idleGroup) return;
+
+            const mobile = window.innerWidth < 768;
 
             const tl = gsap.timeline({
                 scrollTrigger: {
@@ -64,7 +71,11 @@ const Section2 = () => {
                 },
             });
 
-            tl.fromTo(scrollGroup.position, { x: 5 }, { x: 0, duration: 1, ease: 'power1.inOut' });
+            tl.fromTo(
+                scrollGroup.position,
+                { x: mobile ? 3 : 5 },
+                { x: 0, duration: 1, ease: 'power1.inOut' },
+            );
 
             const cards = ['.c1', '.c2', '.c3', '.c4'];
             cards.forEach((card, i) => {
@@ -73,8 +84,16 @@ const Section2 = () => {
 
                 tl.fromTo(
                     card,
-                    { y: '120vh', x: isLeft ? '-10%' : '10%' },
-                    { y: '-120vh', x: isLeft ? '25%' : '-25%', duration: 3, ease: 'none' },
+                    {
+                        y: '120vh',
+                        x: isLeft ? (mobile ? '-5%' : '-10%') : mobile ? '5%' : '10%',
+                    },
+                    {
+                        y: '-120vh',
+                        x: isLeft ? (mobile ? '10%' : '25%') : mobile ? '-10%' : '-25%',
+                        duration: 3,
+                        ease: 'none',
+                    },
                     startTime,
                 );
 
@@ -128,7 +147,7 @@ const Section2 = () => {
                     className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
                 >
                     {/* Top Ellipse */}
-                    <div className="absolute top-0 left-0 w-full max-w-5xl opacity-64">
+                    <div className="absolute top-0 left-0 w-full max-w-2xl md:max-w-5xl opacity-64">
                         <Image
                             src="/ellipse_121.png"
                             alt=""
@@ -154,7 +173,7 @@ const Section2 = () => {
                     {CARDS.map((card, i) => (
                         <div
                             key={i}
-                            className={`c${i + 1} absolute ${i % 2 === 0 ? 'left-0' : 'right-20'}`}
+                            className={`c${i + 1} absolute ${i % 2 === 0 ? 'left-10 md:left-0' : 'right-10 md:right-20'}`}
                         >
                             <Card text={card.text} url={card.url} textUnder={i % 2 !== 0} />
                         </div>
@@ -163,7 +182,7 @@ const Section2 = () => {
 
                 {/* 3D Layer */}
                 <div ref={canvasContainerRef} className="absolute inset-0 z-20 pointer-events-none">
-                    <Canvas camera={{ position: [0, 0, 5], fov: 35 }}>
+                    <Canvas camera={{ position: [0, 0, isMobile ? 10 : 5], fov: 35 }}>
                         <group ref={setScrollGroup}>
                             <group ref={setIdleGroup}>
                                 <Swan />

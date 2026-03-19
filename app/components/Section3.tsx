@@ -25,6 +25,7 @@ const TeamSection = () => {
     const animate = useCallback(() => {
         if (!emblaApi) return;
 
+        const isMobile = window.innerWidth < 768;
         const progress = emblaApi.scrollProgress();
         const snaps = emblaApi.scrollSnapList();
         const slidesCount = CARDS.length;
@@ -69,7 +70,7 @@ const TeamSection = () => {
             const img = card.querySelector('.card-img');
             if (img) {
                 gsap.to(img, {
-                    height: isCenter ? '65%' : '100%',
+                    height: isCenter ? (isMobile ? '75%' : '65%') : '100%',
                     duration: 0.3,
                     ease: 'power2.out',
                     overwrite: true,
@@ -101,7 +102,7 @@ const TeamSection = () => {
 
     return (
         <section className="relative w-full min-h-screen overflow-hidden flex flex-col items-center justify-center py-20 select-none bg-black">
-            <h2 className="text-5xl md:text-7xl font-medium text-[#f5f0e8] tracking-tight mb-12 ">
+            <h2 className="text-5xl md:text-7xl font-medium text-center text-[#f5f0e8] max-w-90 md:max-w-202 tracking-tight mb-12 ">
                 We are <span className="text-[#AA7F2C]">Swanson</span>
             </h2>
 
@@ -112,12 +113,10 @@ const TeamSection = () => {
                 >
                     <div className="flex -ml-4">
                         {CARDS.map((card, i) => (
-                            <div key={i} className="min-w-0 pl-4" style={{ flex: '0 0 35%' }}>
-                                {' '}
-                                {/* Slightly wider cards */}
+                            <div key={i} className="min-w-0 pl-4 flex-[0_0_70%] md:flex-[0_0_35%]">
                                 <div
                                     onClick={() => emblaApi?.scrollTo(i)}
-                                    className="h-137.5 rounded-3xl overflow-hidden backdrop-blur-xl bg-white/5 flex flex-col cursor-pointer will-change-transform relative shadow-2xl"
+                                    className="h-110 md:h-137.5 rounded-3xl overflow-hidden backdrop-blur-xl bg-[#282828] flex flex-col cursor-pointer will-change-transform relative shadow-2xl"
                                 >
                                     <div className="card-img relative w-full h-full rounded-3xl overflow-hidden shrink-0">
                                         <Image
@@ -131,10 +130,10 @@ const TeamSection = () => {
                                     </div>
 
                                     <div className="card-info absolute bottom-0 left-0 right-0 flex flex-col items-center gap-2 py-8 px-5 opacity-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                                        <h3 className="text-2xl font-bold text-[#f5f0e8] font-serif">
+                                        <h3 className="text-2xl md:text-4xl font-bold text-[#f5f0e8] font-serif">
                                             {card.name}
                                         </h3>
-                                        <p className="text-xs text-[#b49b50] uppercase tracking-widest">
+                                        <p className="text-xs md:text-sm text-cennter tracking-widest">
                                             {card.role}
                                         </p>
                                     </div>
@@ -144,11 +143,11 @@ const TeamSection = () => {
                     </div>
                 </div>
 
-                <div className="absolute bottom-65 right-[25%] z-40 w-45 h-45 rounded-full bg-[#AA7F2C] flex items-center justify-center text-[29px]  tracking-widest text-black pointer-events-none">
+                <div className="absolute bottom-50 md:bottom-65 right-[10%] md:right-[25%] z-40 w-24 h-24 md:w-45 md:h-45 rounded-full bg-[#AA7F2C] flex items-center justify-center text-[16px] md:text-[29px]  tracking-widest text-black pointer-events-none">
                     DRAG
                 </div>
 
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-125 h-12.5 rounded-[50%] border-2 border-[#AA7F2C]/80 pointer-events-none z-40" />
+                <div className="absolute bottom-6 md:bottom-4 left-1/2 -translate-x-1/2 w-70 h-8 md:w-125 md:h-12.5 rounded-[50%] border-2 border-[#AA7F2C]/80 pointer-events-none z-40" />
             </div>
         </section>
     );

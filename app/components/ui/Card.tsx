@@ -9,19 +9,21 @@ interface CardProps {
 const Card = ({ text, url, textUnder = false }: CardProps) => {
     return (
         <div
-            className={`flex flex-col w-[700px] gap-4 
+            className={`flex flex-col gap-4 
                 ${textUnder ? 'items-end' : 'items-start'} 
                 ${textUnder ? '' : 'flex-col-reverse'}`}
         >
-            {/* Text Overlay - Optional styling to match your reference image */}
+            {/* Text Container */}
             <p
-                className={`text-white/80 text-sm font-light leading-relaxed max-w-md px-2
+                className={`text-white text-xs md:text-xl font-light leading-relaxed px-2
+                   w-[85vw] md:w-full max-w-lg md:max-w-md 
                 ${textUnder ? 'text-right' : 'text-left'}`}
             >
                 {text}
             </p>
 
-            <div className="relative overflow-hidden rounded-2xl bg-zinc-900">
+            {/* Image Container */}
+            <div className="relative overflow-hidden rounded-2xl bg-zinc-900 w-55 md:w-175">
                 <Image
                     src={url}
                     alt={text}
