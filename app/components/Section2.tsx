@@ -48,7 +48,7 @@ const Section2 = () => {
 
     useEffect(() => {
         setIsMobile(window.innerWidth < 768);
-    }, []);
+    }, [isMobile]);
 
     useGSAP(
         () => {
