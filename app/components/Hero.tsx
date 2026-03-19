@@ -110,7 +110,7 @@ export default function Hero() {
                     '.headline_main',
                     { y: 600, autoAlpha: 0 },
                     { y: 0, autoAlpha: 1, duration: 1 },
-                    '+=0.5',
+                    '-=0.5',
                 );
 
             window.scrollTo(0, 0);
